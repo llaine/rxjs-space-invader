@@ -1,10 +1,14 @@
 import Rx from 'rx';
 
 // Creating board game
-const canvas = document.createElement('canvas');
-const context = canvas.getContext('2d');
+export const canvas = document.createElement('canvas');
+export const context = canvas.getContext('2d');
 
-// Creating a canvas which fit the whole screen.
+// Initializing the stars stream.
+const SPEED = 40;
+const STAR_NUMBER = 250;
+
+// Drawing thecanvas which fit the whole screen.
 document.body.appendChild(canvas);
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -13,7 +17,7 @@ canvas.height = window.innerHeight;
  * Paint a black background and draws the stars on the canvas.
  * @param stars
  */
-function paintStars(stars) {
+export function paintStars(stars) {
   context.fillStyle = '#000000';
   context.fillRect(0, 0, canvas.width, canvas.height);
   context.fillStyle = '#ffffff';
@@ -22,10 +26,8 @@ function paintStars(stars) {
   })
 }
 
-// Initializing the stars stream.
-const SPEED = 40;
-const STAR_NUMBER = 250;
-const StarStream = Rx.Observable.range(1, STAR_NUMBER)
+// The stream wich create all the stars.
+export const StarStream = Rx.Observable.range(1, STAR_NUMBER)
   .map(function() {
     // Each star is representing by an object
     // with coordinates and a size
@@ -48,11 +50,4 @@ const StarStream = Rx.Observable.range(1, STAR_NUMBER)
       });
       return starArray;
     })
-  })
-  // We finally subscribe to the observable
-  // and paintStars to it.
-  .subscribe(function(starArray) {
-    paintStars(starArray);
   });
-
-export { StarStream, canvas, context };

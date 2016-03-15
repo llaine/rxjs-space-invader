@@ -28,11 +28,11 @@ function drawTriangle(x, y, width, color, direction) {
  * @param x
  * @param y
  */
-function paintSpaceShip(x, y) {
+export function paintSpaceShip(x, y) {
   drawTriangle(x, y, '#ff0000', 'up');
 }
 
-const SpaceShip = mouseMove
+export const SpaceShip = mouseMove
   .map(function(event) {
     return {
       x: event.clientX,
