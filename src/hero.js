@@ -4,8 +4,32 @@ import { canvas, context } from './starfield';
 const HERO_Y = canvas.height - 30;
 const mouseMove = Rx.Observable.fromEvent(canvas, 'mousemove');
 
+/**
+ * Render our hero on the screen.
+ * It's basically a simple triangle.
+ * @param x
+ * @param y
+ * @param width
+ * @param color
+ * @param direction
+ */
 function drawTriangle(x, y, width, color, direction) {
+  context.fillStyle = color;
+  context.beginPath();
+  context.moveTo(x - width, y);
+  context.lineTo(x, direction === 'up' ? y - width : y + width);
+  context.lineTo(x + width, y);
+  context.lineTo(x - width, y);
+  context.fill();
+}
 
+/**
+ * Paint our hero in green.
+ * @param x
+ * @param y
+ */
+function paintSpaceShip(x, y) {
+  drawTriangle(x, y, '#ff0000', 'up');
 }
 
 const SpaceShip = mouseMove
