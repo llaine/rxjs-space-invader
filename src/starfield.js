@@ -32,14 +32,14 @@ export const StarStream = Rx.Observable.range(1, STAR_NUMBER)
   .toArray()
   .flatMap(function(starArray) {
     return Rx.Observable.interval(SPEED).map(function() {
-      starArray.forEach(function (star) {
+      return starArray.map(function (star) {
         // Reset star to the top of the screen
         if (star.y >= canvas.height) {
           star.y = 0;
         }
         // Else we move the star
         star.y += 3;
+        return star;
       });
-      return starArray;
     })
   });

@@ -14,7 +14,7 @@ export function paintScore(score) {
 export function paintCommands() {
   context.fillStyle = '#ffffff';
   context.font = 'bold 15px sans-serif';
-  context.fillText('Spacebar/Click to shot Mouse to move and Ctrl + R to play again!', 700, 40);
+  context.fillText('Spacebar/Click to shot. Mouse to move and .Ctrl + R to play again!', 700, 40);
 }
 
 
