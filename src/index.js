@@ -1,4 +1,4 @@
-import { paintStars, StarStream } from './starfield';
+import { paintStars, StarStream, SPEED } from './starfield';
 import { paintSpaceShip, SpaceShip } from './hero';
 import { paintEnemies, Enemies } from './enemy';
 
@@ -16,6 +16,6 @@ const Game = Rx.Observable
     function (stars, spaceship, enemies) {
       return { stars, spaceship, enemies }
     }
-  );
-
-Game.subscribe(renderScene);
+  )
+  .sample(SPEED)
+  .subscribe(renderScene);

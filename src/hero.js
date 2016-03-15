@@ -13,6 +13,7 @@ export function paintSpaceShip(x, y) {
   drawTriangle(x, y, '#ff0000', 'up');
 }
 
+// Hero Moving observable.
 export const SpaceShip = mouseMove
   .map(function(event) {
     return {
@@ -26,3 +27,31 @@ export const SpaceShip = mouseMove
     x: canvas.width / 2,
     y: HERO_Y
   });
+
+// Observable which takes care of the shotting feature for the user.
+const playerFiring = Rx.Observable
+  .merge(
+    Rx.Observable.fromEvent(canvas, 'click'),
+    Rx.Observable.fromEvent(canvas, 'keydown')
+      // We only want the spacebar
+      .filter(evt => evt.keyCode === 32)
+  )
+  // Limit the shooting frequency to increase difficulty ;)
+  .sample(200)
+  // Set a timestamp property to every observable emits.
+  .timestamp();
+
+export const HeroShots = Rx.Observable
+  .combineLatest(
+    playerFiring,
+    SpaceShip,
+    function (shotEvents, spaceShip) {
+      return {
+        x: spaceShip.x
+      }
+    }
+  )
+  .scan(function (shotArray, shot) {
+    shotArray.push({ x: shot.x, y:HERO_Y });
+    return shotArray
+  }, []);
