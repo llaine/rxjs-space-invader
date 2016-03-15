@@ -4,12 +4,25 @@ import Rx from 'rx';
 const canvas = document.createElement('canvas');
 const context = canvas.getContext('2d');
 
-// Canvas which fit the all screen.
+// Creating a canvas which fit the whole screen.
 document.body.appendChild(canvas);
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+/**
+ * Paint a black background and draws the stars on the canvas.
+ * @param stars
+ */
+function paintStars(stars) {
+  context.fillStyle = '#000000';
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = '#ffffff';
+  stars.forEach(function(star) {
+    context.fillRect(star.x, star.y, star.size, star.size);
+  })
+}
 
+// Initializing the stars stream.
 const SPEED = 40;
 const STAR_NUMBER = 250;
 const StarStream = Rx.Observable.range(1, STAR_NUMBER)
@@ -21,4 +34,21 @@ const StarStream = Rx.Observable.range(1, STAR_NUMBER)
       y: parseInt(Math.random() * canvas.height),
       size: Math.random() * 3 + 1
     }
+  })
+  .toArray()
+  .flatMap(function(starArray) {
+    return Rx.Observable.interval(SPEED).map(function() {
+      starArray.forEach(function (star) {
+        // Reset star to the top of the screen
+        if (star.y >= canvas.height) {
+          star.y = 0;
+        }
+        // Else we move the star
+        star.y += 3;
+      });
+      return starArray;
+    })
+  })
+  .subscribe(function(starArray) {
+    paintStars(starArray);
   });
