@@ -3,8 +3,12 @@ import { canvas, context, drawTriangle } from './canvas';
 
 const HERO_Y = canvas.height - 30;
 const mouseMove = Rx.Observable.fromEvent(canvas, 'mousemove');
-const SHOOTING_SPEED = 15;
+export const SHOOTING_SPEED = 15;
 
+/**
+ * Draw the shots on the screen in yellow.
+ * @param heroShots
+ */
 export function paintHeroShots(heroShots) {
   heroShots.forEach(function (shot) {
     shot.y -= SHOOTING_SPEED;
@@ -41,7 +45,6 @@ const playerFiring = Rx.Observable
   .merge(
     Rx.Observable.fromEvent(canvas, 'click'),
     Rx.Observable.fromEvent(canvas, 'keydown')
-      // We only want the spacebar
       .filter(evt => evt.keyCode === 32)
   )
   // Limit the shooting frequency to increase difficulty ;)
@@ -55,10 +58,13 @@ export const HeroShots = Rx.Observable
     SpaceShip,
     function (shotEvents, spaceShip) {
       return {
+        timestamp: shotEvents.timestamp,
         x: spaceShip.x
       }
     }
   )
+  // Filter our results that has already been emitted.
+  .distinctUntilChanged(shot => shot.timestamp)
   .scan(function (shotArray, shot) {
     shotArray.push({ x: shot.x, y:HERO_Y });
     return shotArray
