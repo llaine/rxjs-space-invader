@@ -49,6 +49,10 @@ const StarStream = Rx.Observable.range(1, STAR_NUMBER)
       return starArray;
     })
   })
+  // We finally subscribe to the observable
+  // and paintStars to it.
   .subscribe(function(starArray) {
     paintStars(starArray);
   });
+
+export { StarStream, canvas, context };
