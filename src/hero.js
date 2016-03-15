@@ -1,18 +1,36 @@
 import Rx from 'rx';
 import { canvas, context, drawTriangle } from './canvas';
+import { collision, SHOOTING_SPEED, SCORE_INCREASE } from './helpers';
+import { ScoreSubject } from './score';
+
 
 const HERO_Y = canvas.height - 30;
 const mouseMove = Rx.Observable.fromEvent(canvas, 'mousemove');
-export const SHOOTING_SPEED = 15;
 
 /**
  * Draw the shots on the screen in yellow.
  * @param heroShots
+ * @param enemies
  */
-export function paintHeroShots(heroShots) {
+export function paintHeroShots(heroShots, enemies) {
   heroShots.forEach(function (shot) {
+    // Check whether each shot hits an enemy.
+    // For cases where a hit occurs, we'll set a property isDead to true
+    // on that enemy that has been hit, and we'll set the coordinates of the
+    // shot to outside the screen. The shot will eventually be filtered out because it's outside
+    // the screen.
+    for(let l = 0; l < enemies.length ; l ++) {
+      const enemy = enemies[l];
+      if(!enemy.isDead && collision(shot, enemy)) {
+        ScoreSubject.onNext(SCORE_INCREASE);
+        enemy.isDead = true;
+        shot.x = shot.y = -100;
+        break;
+      }
+    }
+
     shot.y -= SHOOTING_SPEED;
-    drawTriangle(shot.x, shot.y, 5, '#ffff00', 'up')
+    drawTriangle(shot.x, shot.y, 10, '#ffff00', 'up')
   })
 }
 
@@ -22,10 +40,10 @@ export function paintHeroShots(heroShots) {
  * @param y
  */
 export function paintSpaceShip(x, y) {
-  drawTriangle(x, y, 10, '#ff0000', 'up');
+  drawTriangle(x, y, 20, '#ff0000', 'up');
 }
 
-// Hero Moving observable.
+// Hero moves observable, based on mouseMove events.
 export const SpaceShip = mouseMove
   .map(function(event) {
     return {
@@ -44,8 +62,10 @@ export const SpaceShip = mouseMove
 const playerFiring = Rx.Observable
   .merge(
     Rx.Observable.fromEvent(canvas, 'click'),
-    Rx.Observable.fromEvent(canvas, 'keydown')
-      .filter(evt => evt.keyCode === 32)
+    Rx.Observable.fromEvent(document, 'keydown')
+      .filter(function(evt) {
+        return evt.keyCode === 32;
+      })
   )
   // Limit the shooting frequency to increase difficulty ;)
   .sample(200)

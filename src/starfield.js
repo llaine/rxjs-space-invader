@@ -1,9 +1,9 @@
 import Rx from 'rx';
 import { canvas, context } from './canvas';
+import { SPEED } from './helpers';
 
 // Initializing the stars stream constants.
 const STAR_NUMBER = 250;
-export const SPEED = 40;
 
 /**
  * Paint a black background and draws the stars on the canvas.
