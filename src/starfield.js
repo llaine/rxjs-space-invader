@@ -1,17 +1,9 @@
 import Rx from 'rx';
+import { canvas, context } from './canvas';
 
-// Creating board game
-export const canvas = document.createElement('canvas');
-export const context = canvas.getContext('2d');
-
-// Initializing the stars stream.
+// Initializing the stars stream constants.
 const SPEED = 40;
 const STAR_NUMBER = 250;
-
-// Drawing thecanvas which fit the whole screen.
-document.body.appendChild(canvas);
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
 
 /**
  * Paint a black background and draws the stars on the canvas.
