@@ -3,6 +3,14 @@ import { canvas, context, drawTriangle } from './canvas';
 
 const HERO_Y = canvas.height - 30;
 const mouseMove = Rx.Observable.fromEvent(canvas, 'mousemove');
+const SHOOTING_SPEED = 15;
+
+export function paintHeroShots(heroShots) {
+  heroShots.forEach(function (shot) {
+    shot.y -= SHOOTING_SPEED;
+    drawTriangle(shot.x, shot.y, 5, '#ffff00', 'up')
+  })
+}
 
 /**
  * Paint our hero in green.
@@ -10,7 +18,7 @@ const mouseMove = Rx.Observable.fromEvent(canvas, 'mousemove');
  * @param y
  */
 export function paintSpaceShip(x, y) {
-  drawTriangle(x, y, '#ff0000', 'up');
+  drawTriangle(x, y, 10, '#ff0000', 'up');
 }
 
 // Hero Moving observable.
