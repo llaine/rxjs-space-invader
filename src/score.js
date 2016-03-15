@@ -11,6 +11,12 @@ export function paintScore(score) {
   context.fillText(`Score : ${score}`, 40, 43)
 }
 
+export function paintCommands() {
+  context.fillStyle = '#ffffff';
+  context.font = 'bold 15px sans-serif';
+  context.fillText('Spacebar/Click to shot Mouse to move and Ctrl + R to play again!', 700, 40);
+}
+
 
 export const ScoreSubject = new Rx.Subject();
 

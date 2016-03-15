@@ -1,7 +1,7 @@
 import { paintStars, StarStream } from './starfield';
 import { paintSpaceShip, paintHeroShots, SpaceShip, HeroShots } from './hero';
 import { paintEnemies, Enemies } from './enemy';
-import { paintScore, Score } from './score';
+import { paintScore, paintCommands, Score } from './score';
 
 import { SPEED, gameOver } from './helpers';
 
@@ -15,6 +15,7 @@ function renderScene(actors) {
   paintEnemies(actors.enemies);
   paintHeroShots(actors.heroShots, actors.enemies);
   paintScore(actors.score);
+  paintCommands();
 }
 
 // Allows us to combine multiple observable
